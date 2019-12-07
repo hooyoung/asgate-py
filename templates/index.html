@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<title>AsGate</title>
+</head>
+<body>
+<div id="content">Loading...</div>
+<script type="text/javascript" async="true">
+function contentLoaded() {
+  var elt = document.getElementById("content");
+  elt.innerHTML = this.responseText;
+}
+
+function challengeLoaded() {
+  console.log(this.responseText);
+  var obj = JSON.parse(this.responseText);
+  var solution = eval(obj.eval_me);
+
+  var req = new XMLHttpRequest();
+  req.addEventListener("load", contentLoaded);
+  req.open("POST", "/content");
+  req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  req.send("challenge_id=" + encodeURIComponent(obj.challenge_id) + "&solution=" + encodeURIComponent(JSON.stringify(solution)));
+}
+
+var req = new XMLHttpRequest();
+req.addEventListener("load", challengeLoaded);
+req.open("GET", "/challenge");
+req.send();
+</script>
+</body>
+</html>
